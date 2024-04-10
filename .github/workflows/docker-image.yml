@@ -1,0 +1,20 @@
+name: Deploy to Githup with Docker
+
+on:
+  workflow_dispatch:
+    
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  FLY_APP_NAME: ${{ secrets.FLY_APP_NAME }}
+jobs:
+  deploy:
+      name: Deploy app
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - uses: superfly/flyctl-actions/setup-flyctl@master
+        - run: |
+            bash ./flytoml.sh
+            flyctl apps create $FLY_APP_NAME
+            flyctl deploy --remote-only
+
